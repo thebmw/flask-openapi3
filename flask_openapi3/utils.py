@@ -8,7 +8,6 @@ import sys
 from enum import Enum
 from http import HTTPStatus
 from typing import get_type_hints, Dict, Type, Callable, List, Tuple, Optional, Any, DefaultDict
-from pprint import pprint
 
 from flask import make_response, current_app
 from flask.wrappers import Response as FlaskResponse
@@ -127,8 +126,6 @@ def get_model_schema(model: Type[BaseModel]) -> dict:
     by_alias = bool(model_config.get("by_alias", True))
 
     schema = model.model_json_schema(by_alias=by_alias, ref_template=OPENAPI3_REF_TEMPLATE, mode='serialization')
-    print(model)
-    pprint(schema)
     return schema
 
 
