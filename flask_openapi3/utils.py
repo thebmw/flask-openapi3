@@ -125,6 +125,18 @@ def get_model_schema(model: Type[BaseModel]) -> dict:
     model_config = model.model_config
     by_alias = bool(model_config.get("by_alias", True))
 
+    schema = model.model_json_schema(by_alias=by_alias, ref_template=OPENAPI3_REF_TEMPLATE)
+    return schema
+
+def get_response_model_schema(model: Type[BaseModel]) -> dict:
+    """Converts a Pydantic model to an OpenAPI schema."""
+
+    assert inspect.isclass(model) and issubclass(model, BaseModel), \
+        f"{model} is invalid `pydantic.BaseModel`"
+
+    model_config = model.model_config
+    by_alias = bool(model_config.get("by_alias", True))
+
     schema = model.model_json_schema(by_alias=by_alias, ref_template=OPENAPI3_REF_TEMPLATE, mode='serialization')
     return schema
 
@@ -328,7 +340,7 @@ def get_responses(
         else:
             # OpenAPI 3 support ^[a-zA-Z0-9\.\-_]+$ so we should normalize __name__
             name = normalize_name(response.__name__)
-            schema = get_model_schema(response)
+            schema = get_response_model_schema(response)
             _responses[key] = Response(
                 description=HTTP_STATUS.get(key, ""),
                 content={
