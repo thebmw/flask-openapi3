@@ -125,7 +125,7 @@ def get_model_schema(model: Type[BaseModel]) -> dict:
     model_config = model.model_config
     by_alias = bool(model_config.get("by_alias", True))
 
-    return model.model_json_schema(by_alias=by_alias, ref_template=OPENAPI3_REF_TEMPLATE)
+    return model.model_json_schema(by_alias=by_alias, ref_template=OPENAPI3_REF_TEMPLATE, mode='serialization')
 
 
 def parse_header(header: Type[BaseModel]) -> Tuple[List[Parameter], dict]:
